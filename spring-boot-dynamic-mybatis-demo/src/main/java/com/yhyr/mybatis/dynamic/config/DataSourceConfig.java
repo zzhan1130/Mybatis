@@ -2,6 +2,7 @@ package com.yhyr.mybatis.dynamic.config;
 
 import com.alibaba.druid.pool.DruidDataSource;
 import com.yhyr.mybatis.dynamic.datasource.DynamicDataSource;
+import com.yhyr.mybatis.dynamic.enums.DbType;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.mybatis.spring.SqlSessionFactoryBean;
 import org.mybatis.spring.SqlSessionTemplate;
@@ -21,43 +22,43 @@ import java.util.Map;
 
 @Configuration
 public class DataSourceConfig {
-    @Value("${spring.datasource.default.url}")
-    private String defaultDBUrl;
-    @Value("${spring.datasource.default.username}")
-    private String defaultDBUser;
-    @Value("${spring.datasource.default.password}")
-    private String defaultDBPassword;
-    @Value("${spring.datasource.default.driver-class-name}")
-    private String defaultDBDreiverName;
+    @Value("${spring.datasource.ds0.url}")
+    private String ds0DBUrl;
+    @Value("${spring.datasource.ds0.username}")
+    private String ds0DBUser;
+    @Value("${spring.datasource.ds0.password}")
+    private String ds0DBPassword;
+    @Value("${spring.datasource.ds0.driver-class-name}")
+    private String ds0DBDreiverName;
 
-    @Value("${spring.datasource.master.url}")
-    private String masterDBUrl;
-    @Value("${spring.datasource.master.username}")
-    private String masterDBUser;
-    @Value("${spring.datasource.master.password}")
-    private String masterDBPassword;
-    @Value("${spring.datasource.default.driver-class-name}")
-    private String masterDBDreiverName;
+    @Value("${spring.datasource.ds1.url}")
+    private String ds1DBUrl;
+    @Value("${spring.datasource.ds1.username}")
+    private String ds1DBUser;
+    @Value("${spring.datasource.ds1.password}")
+    private String ds1DBPassword;
+    @Value("${spring.datasource.ds1.driver-class-name}")
+    private String ds1DBDreiverName;
 
     @Bean
     public DynamicDataSource dynamicDataSource() {
         DynamicDataSource dynamicDataSource = DynamicDataSource.getInstance();
 
         DruidDataSource defaultDataSource = new DruidDataSource();
-        defaultDataSource.setUrl(defaultDBUrl);
-        defaultDataSource.setUsername(defaultDBUser);
-        defaultDataSource.setPassword(defaultDBPassword);
-        defaultDataSource.setDriverClassName(defaultDBDreiverName);
+        defaultDataSource.setUrl(ds0DBUrl);
+        defaultDataSource.setUsername(ds0DBUser);
+        defaultDataSource.setPassword(ds0DBPassword);
+        defaultDataSource.setDriverClassName(ds0DBDreiverName);
 
         DruidDataSource masterDataSource = new DruidDataSource();
-        masterDataSource.setDriverClassName(masterDBDreiverName);
-        masterDataSource.setUrl(masterDBUrl);
-        masterDataSource.setUsername(masterDBUser);
-        masterDataSource.setPassword(masterDBPassword);
+        masterDataSource.setDriverClassName(ds1DBDreiverName);
+        masterDataSource.setUrl(ds1DBUrl);
+        masterDataSource.setUsername(ds1DBUser);
+        masterDataSource.setPassword(ds1DBPassword);
 
         Map<Object,Object> map = new HashMap<>();
-        map.put("default", defaultDataSource);
-        map.put("master", masterDataSource);
+        map.put(DbType.DB0.getDbName(), defaultDataSource);
+        map.put(DbType.DB1.getDbName(), masterDataSource);
         dynamicDataSource.setTargetDataSources(map);
         dynamicDataSource.setDefaultTargetDataSource(defaultDataSource);
 

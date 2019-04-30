@@ -7,6 +7,7 @@ import java.util.Map;
 
 /**
  * Created by YHYR on 2017-12-25
+ * @author zzhan
  */
 
 public class DynamicDataSource extends AbstractRoutingDataSource {
@@ -18,7 +19,8 @@ public class DynamicDataSource extends AbstractRoutingDataSource {
     public void setTargetDataSources(Map<Object, Object> targetDataSources) {
         super.setTargetDataSources(targetDataSources);
         dataSourceMap.putAll(targetDataSources);
-        super.afterPropertiesSet();// 必须添加该句，否则新添加数据源无法识别到
+        // 必须添加该句，否则新添加数据源无法识别到
+        super.afterPropertiesSet();
     }
 
     public Map<Object, Object> getDataSourceMap() {
@@ -35,7 +37,12 @@ public class DynamicDataSource extends AbstractRoutingDataSource {
         }
         return instance;
     }
-    //必须实现其方法
+
+    /**
+     * 该方法决定具体使用哪个数据源
+     * @return
+     */
+    @Override
     protected Object determineCurrentLookupKey() {
         return DataSourceContextHolder.getDBType();
     }
